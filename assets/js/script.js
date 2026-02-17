@@ -7,13 +7,14 @@ const LASTFM_PROXY = "https://artx.com.ar/extras/relay/v3/api/lastfm.php";
 
 /* ===== ELEMENTS ===== */
 
-const audio = document.getElementById("audio");
-const cover = document.getElementById("cover");
-const titleEl = document.getElementById("title");
-const artistEl = document.getElementById("artist");
-const iconPlay = document.getElementById("iconPlay");
-const iconStop = document.getElementById("iconStop");
-const btn = document.getElementById("btn");
+const audio     = document.getElementById("audio");
+const cover     = document.getElementById("cover");
+const titleEl   = document.getElementById("title");
+const artistEl  = document.getElementById("artist");
+const iconPlay  = document.getElementById("iconPlay");
+const iconStop  = document.getElementById("iconStop");
+const btn       = document.getElementById("btn");
+const vol       = document.getElementById("volume");
 
 audio.src = STREAM_URL;
 
@@ -47,10 +48,10 @@ function handleMeta(title){
   if(title.includes(" - ")){
     const p = title.split(" - ");
     artist = p[0].trim();
-    song = p.slice(1).join(" - ").trim();
+    song   = p.slice(1).join(" - ").trim();
   }
 
-  titleEl.innerText = song;
+  titleEl.innerText  = song;
   artistEl.innerText = artist;
 
   loadCover(artist, song);
@@ -94,7 +95,6 @@ function startPolling(){
 /* ===== COVER VIA BACKEND (NO API KEY) ===== */
 
 async function loadCover(artist, title){
-
   if(!artist || !title){
     cover.src = FALLBACK;
     return;
@@ -118,11 +118,34 @@ async function loadCover(artist, title){
   cover.src = FALLBACK;
 }
 
+/* ===== VOLUME CONTROL ===== */
 
-const vol = document.getElementById("volume");
+// volumen inicial
+audio.volume = vol.value / 100;
+updateVolumeColor(vol.value);
 
-audio.volume = 0.8;
-
+// cambio de volumen
 vol.addEventListener("input", e => {
-  audio.volume = e.target.value / 100;
+  const value = e.target.value;
+  audio.volume = value / 100;
+  updateVolumeColor(value);
 });
+
+// color dinámico del slider
+function updateVolumeColor(value){
+  let color, glow;
+
+  if(value >= 90){
+    color = "#ef4444"; // rojo
+    glow  = "rgba(239,68,68,.9)";
+  }else if(value >= 70){
+    color = "#f59e0b"; // naranja
+    glow  = "rgba(245,158,11,.9)";
+  }else{
+    color = "#22c55e"; // verde
+    glow  = "rgba(34,197,94,.8)";
+  }
+
+  vol.style.setProperty("--vol-color", color);
+  vol.style.setProperty("--vol-glow", glow);
+}
