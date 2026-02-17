@@ -1,6 +1,6 @@
 /* ===== CONFIG ===== */
 
-const STREAM_URL = "https://stream.zeno.fm/f44npslgxjyuv";
+const STREAM_URL = "https://stream.host-cx.net.ar/listen/konata-station-radio/tunein.mp3";
 const SSE_URL = "https://api.zeno.fm/mounts/metadata/subscribe/f44npslgxjyuv";
 const FALLBACK = "https://i.postimg.cc/76P7vwVG/ks-logo.png";
 const LASTFM_PROXY = "https://artx.com.ar/extras/relay/v3/api/lastfm.php";
