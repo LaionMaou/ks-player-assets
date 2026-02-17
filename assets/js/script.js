@@ -2,8 +2,8 @@
 
 const STREAM_URL = "https://stream.zeno.fm/f44npslgxjyuv";
 const SSE_URL = "https://api.zeno.fm/mounts/metadata/subscribe/f44npslgxjyuv";
-const LASTFM_KEY = "f0b583433bf0fba04aa60da6f649f479";
 const FALLBACK = "https://i.postimg.cc/76P7vwVG/ks-logo.png";
+const LASTFM_PROXY = "https://artx.com.ar/extras/relay/v3/api/lastfm.php";
 
 /* ===== ELEMENTS ===== */
 
@@ -24,14 +24,14 @@ btn.addEventListener("click", togglePlay);
 function togglePlay(){
   if(audio.paused){
     audio.play().then(()=>{
-      iconPlay.style.display="none";
-      iconStop.style.display="block";
+      iconPlay.style.display = "none";
+      iconStop.style.display = "block";
       cover.classList.add("playing");
     }).catch(()=>{});
   }else{
     audio.pause();
-    iconPlay.style.display="block";
-    iconStop.style.display="none";
+    iconPlay.style.display = "block";
+    iconStop.style.display = "none";
     cover.classList.remove("playing");
   }
 }
@@ -41,7 +41,8 @@ function togglePlay(){
 function handleMeta(title){
   if(!title) return;
 
-  let artist="", song=title;
+  let artist = "";
+  let song = title;
 
   if(title.includes(" - ")){
     const p = title.split(" - ");
@@ -52,7 +53,7 @@ function handleMeta(title){
   titleEl.innerText = song;
   artistEl.innerText = artist;
 
-  loadCover(artist,song);
+  loadCover(artist, song);
 }
 
 /* ===== SSE ===== */
@@ -87,12 +88,13 @@ function startPolling(){
         handleMeta(j.now_playing.song);
       }
     }catch(e){}
-  },10000);
+  }, 10000);
 }
 
-/* ===== LASTFM COVER ===== */
+/* ===== COVER VIA BACKEND (NO API KEY) ===== */
 
-async function loadCover(artist,title){
+async function loadCover(artist, title){
+
   if(!artist || !title){
     cover.src = FALLBACK;
     return;
@@ -100,21 +102,16 @@ async function loadCover(artist,title){
 
   try{
     const url =
-      "https://ws.audioscrobbler.com/2.0/?method=track.getInfo"+
-      "&api_key="+LASTFM_KEY+
-      "&artist="+encodeURIComponent(artist)+
-      "&track="+encodeURIComponent(title)+
-      "&format=json";
+      LASTFM_PROXY +
+      "?artist=" + encodeURIComponent(artist) +
+      "&track="  + encodeURIComponent(title);
 
     const r = await fetch(url);
     const j = await r.json();
 
-    if(j.track?.album?.image){
-      const img = j.track.album.image.pop()["#text"];
-      if(img){
-        cover.src = img;
-        return;
-      }
+    if(j.image){
+      cover.src = j.image;
+      return;
     }
   }catch(e){}
 
