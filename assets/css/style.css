@@ -48,6 +48,7 @@ body {
   box-shadow: 0 0 40px rgba(0,0,0,.7);
   text-align: center;
   border: 1px solid #111827;
+  position: relative; /* necesario para el volumen */
 }
 
 /* ===== COVER DISC ===== */
@@ -174,4 +175,63 @@ body {
   .discord-btn {
     display: block;
   }
+}
+
+/* ===== VOLUME (ACTUALIZADO) ===== */
+
+.volume {
+  position: absolute;
+  right: -22px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+/* aparece al hover */
+.player:hover .volume {
+  opacity: 1;
+}
+
+/* ocultar completamente en mobile */
+@media (max-width: 767px) {
+  .volume {
+    display: none;
+  }
+}
+
+.volume input[type="range"] {
+  writing-mode: bt-lr;
+  -webkit-appearance: slider-vertical;
+  width: 6px;
+  height: 130px;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* track */
+.volume input[type="range"]::-webkit-slider-runnable-track {
+  width: 6px;
+  background: #1e293b;
+  border-radius: 999px;
+}
+
+/* thumb dinámico */
+.volume input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--vol-color, #22c55e);
+  margin-left: -4px;
+  box-shadow: 0 0 10px var(--vol-glow, rgba(34,197,94,.8));
+}
+
+/* Firefox */
+.volume input[type="range"]::-moz-range-thumb {
+  background: var(--vol-color, #22c55e);
+  border: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
 }
