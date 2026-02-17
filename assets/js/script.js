@@ -117,3 +117,12 @@ async function loadCover(artist, title){
 
   cover.src = FALLBACK;
 }
+
+
+const vol = document.getElementById("volume");
+
+audio.volume = 0.8;
+
+vol.addEventListener("input", e => {
+  audio.volume = e.target.value / 100;
+});
